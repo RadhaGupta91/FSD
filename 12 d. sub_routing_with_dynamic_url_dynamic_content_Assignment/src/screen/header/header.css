@@ -1,0 +1,11 @@
+.header,.footer{
+    width: 100%;
+    background-color: gainsboro;
+    height: 100px;
+    color: #000;
+}
+.header p,.footer p{
+    padding-top:40px;
+    font-size: larger;
+
+}
