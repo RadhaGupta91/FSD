@@ -1,58 +1,32 @@
-/* 3. This is a pure reducer function */
-// mutates a state into a new state
-function reducer(state = 0, action)
-{
-  if(action && action.type == "increase")
-  {
-    return ++state;
-  }
-  else if(action && action.type == "decrease")
-  {
-    return --state;
-  }
-  else
-  {
-    return state;
-  }
+const redux = require('redux');
+const createStore = redux.createStore;
+const initialState = {
+    counter: 0
 }
-
-// renders the mutated state in state view
-function render()
-{
-  let state = stateTree.getState();
-  
-  // updates state view - renders state
-  $stateView.html(state);
+// Reducer
+const rootReducer = (state = initialState, action) => {
+    if (action.type === 'INC_COUNTER') {
+        return {
+            ...state,
+            counter: state.counter + 1
+        };
+    }
+    if (action.type === 'ADD_COUNTER') {
+        return {
+            ...state,
+            counter: state.counter + action.value
+        };
+    }
+    return state;
 };
-
-/* create Redux store */
-/* 1. A read only State Tree initialized - A single source of truth */
-const stateTree = Redux.createStore(reducer);
-
-// render function associated with the State Tree
-stateTree.subscribe(render);
-
-// creates view controls & append to body
-let $controlsView = $(
-  `<div id="view-controls">
-    <button id="btnIncrease">+ increase</button>
-    <button id="btnDecrease">- decrease</button>
-  </div>`);
-
-// create state view - this is what gets updated by the render method
-let $stateView = $(`<div id="view-state">0</div>`);
-
-let $body = $('body');
-let $app = $(`<div id="app"></div>`);
-
-$body.append($app);
-
-$app.append($stateView);
-$app.append($controlsView);
-
-let $btnIncrease = $("#btnIncrease");
-let btnDecrease = $("#btnDecrease");
-
-$btnIncrease.click((e) => {
-  stateTree.dispatch({type:"increase"});
-})
+// Store
+const store = createStore(rootReducer);
+console.log(store.getState());
+// Subscription
+store.subscribe(() => {
+    console.log('[Subscription]', store.getState());
+});
+// Dispatching Action
+store.dispatch({type: 'INC_COUNTER'});
+store.dispatch({type: 'ADD_COUNTER', value: 10});
+console.log(store.getState());
